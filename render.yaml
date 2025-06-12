@@ -6,8 +6,7 @@ services:
     startCommand: node server.js
     plan: free
     envVars:
-      - key: DATABASE_URL
-        sync: false
       - key: COINBASE_API_KEY
         sync: false
-    autoDeploy: true
+      - key: DATABASE_URL
+        sync: false
