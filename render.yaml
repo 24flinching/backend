@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: crypto-pay-backend
+    env: node
+    buildCommand: npm install
+    startCommand: node server.js
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: COINBASE_API_KEY
+        sync: false
+    autoDeploy: true
