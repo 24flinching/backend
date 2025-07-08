@@ -1,0 +1,9 @@
+// .sequelizerc (in root of backend folder)
+const path = require('path');
+
+module.exports = {
+  config: path.resolve(__dirname, 'config', 'sequelize-config.js'),
+  modelsPath: path.resolve(__dirname, 'models'),
+  migrationsPath: path.resolve(__dirname, 'migrations'),
+  seedersPath: path.resolve(__dirname, 'seeders'),
+};

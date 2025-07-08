@@ -1,10 +1,22 @@
 // models/userModel.js
-const db = require('../db');
 
-async function getUserByBusinessId(businessId) {
-  return db('users').where({ business_id: businessId }).first();
+let users = [];
+
+function addUser(user) {
+  users.push(user);
+  return user;
+}
+
+function getUserByEmail(email) {
+  return users.find(u => u.email === email);
+}
+
+function getUserByBusinessId(businessId) {
+  return users.find(u => u.businessId === businessId);
 }
 
 module.exports = {
+  addUser,
+  getUserByEmail,
   getUserByBusinessId,
 };
