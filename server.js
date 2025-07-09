@@ -2,10 +2,10 @@ require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
 const http = require('http');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const path = require('path');
 const { Server } = require('socket.io');
 const { sequelize } = require('./models');
 
@@ -15,13 +15,15 @@ const chargeRoutes = require('./routes/chargeRoutes');
 const webhookRoutes = require('./routes/webhookRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 
-const config = require('./config/config'); // ✅ Load config before using port
+const config = require('./config/config');
 const port = process.env.PORT || config.port || 3001;
-const HOST = process.env.HOST || '0.0.0.0'; // ✅ Required for Render
+const HOST = process.env.HOST || '0.0.0.0';
 
 const app = express();
 const server = http.createServer(app);
 
+// ✅ Trust proxy for Render (fixes rate-limit warnings)
+app.set('trust proxy', 1);
 
 // ✅ Socket.IO setup
 const io = new Server(server, {
@@ -56,7 +58,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// ✅ API Routes (important to be placed before static serving)
+// ✅ API Routes
 app.get('/health', (req, res) => res.send('OK'));
 app.post('/api/auth/test', (req, res) => res.json({ msg: 'Test working' }));
 
@@ -67,11 +69,7 @@ app.use('/api/charges', chargeRoutes);
 app.use('/api/webhooks', webhookRoutes);
 app.use('/dashboard', dashboardRoutes);
 
-// ✅ Serve React frontend
-app.use(express.static(path.join(__dirname, '..', 'crypto-pay-frontend', 'build')));
-app.get(/^\/(?!api|health).*/, (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'crypto-pay-frontend', 'build', 'index.html'));
-});
+// ❌ Removed frontend static file serving (you’re using a separate frontend service)
 
 // ✅ Global Error Handler
 app.use((err, req, res, next) => {
